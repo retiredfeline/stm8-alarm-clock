@@ -15,9 +15,15 @@
 #include "display.h"
 
 static uint8_t display_buffer[4];
+#ifdef	LOWON
+const static uint8_t font[] =
+{ 0xc0, 0xf9, 0xa4, 0xb0, 0x99, 0x92, 0x82, 0xf8, 0x80, 0x90, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
+#define	COLON	0x7f
+#else
 const static uint8_t font[] =
 { 0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 #define	COLON	0x80
+#endif	// LOWON
 
 const static port_pin rclk = { GPIOC, GPIO_PIN_4 };
 const static port_pin srclk = { GPIOC, GPIO_PIN_5 };
@@ -93,20 +99,37 @@ static void display_fill()
 		digits_update(&display_buffer[0], alarm_time.hours);
 		digits_update(&display_buffer[2], alarm_time.minutes);
 		if (alarm_time.on)
+#ifdef	LOWON
+			display_buffer[2] &= COLON;
+#else
 			display_buffer[2] |= COLON;
+#endif	// LOWON
 		break;
 	case ALARM_HOURS:
 		digits_update(&display_buffer[0], alarm_time.hours);
+#ifdef	LOWON
+		display_buffer[2] &= COLON;
+#else
 		display_buffer[2] |= COLON;
+#endif	// LOWON
 		break;
 	case ALARM_MINS:
 		digits_update(&display_buffer[2], alarm_time.minutes);
+#ifdef	LOWON
+		display_buffer[2] &= COLON;
+#else
 		display_buffer[2] |= COLON;
+#endif	// LOWON
 		break;
 	case SLEEP_MINS:
 		digits_update(&display_buffer[2], sleep_minutes);
+#ifdef	LOWON
+		display_buffer[1] &= COLON;
+		display_buffer[2] &= COLON;
+#else
 		display_buffer[1] |= COLON;
 		display_buffer[2] |= COLON;
+#endif	// LOWON
 		break;
 	}
 }

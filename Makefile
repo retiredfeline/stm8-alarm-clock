@@ -3,9 +3,19 @@ CC=sdcc
 CFLAGS=-mstm8
 INCLUDES=-Iinclude -Ipt-1.4
 LIBS=spl.lib
+ALARM_CLOCK?=y	# by default an alarm clock, otherwise plain clock
+LOWON?=		# y means 0 turns on segment
 HARDWARE_SPI?=	# y to use STM8 SPI port
 TM1637?=	# y for TM1637 bitbanged
 DEBUG?=		# y for DEBUG LED blink
+
+ifdef ALARM_CLOCK
+CFLAGS+=-DALARM_CLOCK
+endif
+
+ifdef LOWON
+CFLAGS+=-DLOWON
+endif
 
 ifdef HARDWARE_SPI
 CFLAGS+=-DHARDWARE_SPI

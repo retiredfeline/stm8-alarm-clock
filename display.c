@@ -135,11 +135,11 @@ static void display_fill()
 }
 
 // taken from https://github.com/unfrozen/stm8_libs/blob/master/lib_delay.c
+// modified for calling convention 1
 static void delay_usecs(uint8_t usecs)
 {
 	usecs;
 __asm
-	ld	a, (3, sp)
 	dec	a
 	clrw	x
 	ld	xl,a
